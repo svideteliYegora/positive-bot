@@ -1,30 +1,34 @@
-import asyncio
 import logging
+import os
 import sys
-import configparser
-from aiogram import Bot, Dispatcher, types, F, html
+from aiohttp import web
+from aiogram import Bot, Dispatcher, F, Router
 from aiogram.client.default import DefaultBotProperties
-from aiogram.filters import Command, CommandStart
+from aiogram.filters import Command
 from aiogram.types import Message, CallbackQuery, InputMediaPhoto
-import aiogram.exceptions
 from aiogram.utils.keyboard import (
-    InlineKeyboardBuilder,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
-    KeyboardButton,
-    ReplyKeyboardMarkup
 )
 from aiogram.enums.parse_mode import ParseMode
+from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
 import text
 
-from config import data
+from config import data as params
 
-# Получение значений из раздела Bot
-API_TOKEN = data.TOKEN_API
 
-# Диспетчер, бот
-dp = Dispatcher()
-bot = Bot(token=API_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+API_TOKEN = os.environ['API_TOKEN']   # For get token in params Always Data
+WEB_SERVER_HOST = params.WEBHOOK_HOST
+WEBHOOK_PATH = params.WEBHOOK_PATH
+WEBHOOK_URL = f"{WEB_SERVER_HOST}{WEBHOOK_PATH}"
+WEBHOOK_SECRET = "my-secret"
+WEB_SERVER_PORT = params.WEBAPP_PORT
+WEBAPP_HOST = params.WEBAPP_HOST
+
+
+router = Router()
+
+logging.basicConfig(level=logging.INFO, stream=sys.stdout)
 
 # Словарь с фотографиями и текстом сообщений для каждого пункта
 point_detail = {
@@ -212,33 +216,33 @@ specialists_ikb = InlineKeyboardMarkup(inline_keyboard=[
 ])
 
 
-@dp.message(F.photo)
+@router.message(F.photo)
 async def img_handler(msg: Message) -> None:
     await msg.answer(text=msg.photo[-1].file_id)
 
 
-@dp.message(Command('start'))
+@router.message(Command('start'))
 async def cmd_start_handler(msg: Message) -> None:
     await msg.answer(text=text.WELCOME, reply_markup=start_ikb)
 
 
-@dp.message(Command('statistic786'))
+@router.message(Command('statistic786'))
 async def cmd_statistic_handler(msg: Message) -> None:
     await msg.answer()
 
 
-@dp.callback_query(F.data == 'prevention_points')
+@router.callback_query(F.data == 'prevention_points')
 async def prevention_points_handler(cb_query: CallbackQuery) -> None:
     await cb_query.message.edit_text(text=text.CITY_SELECTION, reply_markup=cities_ikb)
 
 
-@dp.callback_query(F.data == 'online-services')
+@router.callback_query(F.data == 'online-services')
 async def online_services_handler(cb_query: CallbackQuery) -> None:
     await cb_query.message.edit_text(text=text.SERVICE_SELECTION, reply_markup=specialists_ikb)
 
 
-@dp.callback_query(F.data.startswith('continue'))
-@dp.callback_query(F.data.startswith('city'))
+@router.callback_query(F.data.startswith('continue'))
+@router.callback_query(F.data.startswith('city'))
 async def cities_handler(cb_query: CallbackQuery) -> None:
     city = cb_query.data.split("_")[1]
     ikb_dict = {
@@ -254,7 +258,7 @@ async def cities_handler(cb_query: CallbackQuery) -> None:
     await cb_query.message.edit_text(text=text.POINT_SELECTION, reply_markup=ikb)
 
 
-@dp.callback_query(F.data.startswith('back'))
+@router.callback_query(F.data.startswith('back'))
 async def back_handler(cb_query: CallbackQuery) -> None:
     cb_data = cb_query.data.split("_")[1]
 
@@ -270,7 +274,7 @@ async def back_handler(cb_query: CallbackQuery) -> None:
     await cb_query.message.edit_text(text=msg_text, reply_markup=ikb)
 
 
-@dp.callback_query(F.data.startswith('point'))
+@router.callback_query(F.data.startswith('point'))
 async def city_point_handler(cb_query: CallbackQuery) -> None:
     city = cb_query.data.split("_")[1]
     point_data = point_detail[cb_query.data]
@@ -296,23 +300,45 @@ async def city_point_handler(cb_query: CallbackQuery) -> None:
     await cb_query.message.answer(text=text.CONTINUE, reply_markup=ikb)
 
 
-async def main():
-    await dp.start_polling(bot)
+async def on_startup(bot: Bot):
+    await bot.set_webhook(WEBHOOK_URL, secret_token=WEBHOOK_SECRET)
+    logging.info('Bot starting successfully!')
 
 
-async def on_startup(_):
-    await bot.set_webhook(WEBHOOK_URL)
-    logging.info('Bot starting successfuly!')
+def main() -> None:
+    # Dispatcher is a root router
+    dp = Dispatcher()
+    # ... and all other routers should be attached to Dispatcher
+    dp.include_router(router)
 
+    # Register startup hook to initialize webhook
+    dp.startup.register(on_startup)
 
-async def on_shutdown(_):
-    logging.warning('Shutting down..')
-    await bot.delete_webhook()
-    await dp.storage.close()
-    await dp.storage.wait_closed()
-    logging.warning('Bye!')
+    # Initialize Bot instance with default bot properties which will be passed to all API calls
+    # bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+    bot = Bot(token=API_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+
+    # Create aiohttp.web.Application instance
+    app = web.Application()
+
+    # Create an instance of request handler,
+    # aiogram has few implementations for different cases of usage
+    # In this example we use SimpleRequestHandler which is designed to handle simple cases
+    webhook_requests_handler = SimpleRequestHandler(
+        dispatcher=dp,
+        bot=bot,
+        secret_token=WEBHOOK_SECRET,
+    )
+    # Register webhook handler on application
+    webhook_requests_handler.register(app, path=WEBHOOK_PATH)
+
+    # Mount dispatcher startup and shutdown hooks to aiohttp application
+    setup_application(app, dp, bot=bot)
+
+    # And finally start webserver
+    web.run_app(app, host=WEBAPP_HOST, port=WEB_SERVER_PORT)
 
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, stream=sys.stdout)
-    asyncio.run(main())
+    main()
