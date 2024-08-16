@@ -17,8 +17,10 @@ from aiogram.utils.keyboard import (
 from aiogram.enums.parse_mode import ParseMode
 import text
 
+from config import data
+
 # Получение значений из раздела Bot
-API_TOKEN = '6537467286:AAFbaxUJz7h-mHumjiED02WG-jmvlvA5Acs'
+API_TOKEN = data.TOKEN_API
 
 # Диспетчер, бот
 dp = Dispatcher()
@@ -296,6 +298,19 @@ async def city_point_handler(cb_query: CallbackQuery) -> None:
 
 async def main():
     await dp.start_polling(bot)
+
+
+async def on_startup(_):
+    await bot.set_webhook(WEBHOOK_URL)
+    logging.info('Bot starting successfuly!')
+
+
+async def on_shutdown(_):
+    logging.warning('Shutting down..')
+    await bot.delete_webhook()
+    await dp.storage.close()
+    await dp.storage.wait_closed()
+    logging.warning('Bye!')
 
 
 if __name__ == "__main__":
