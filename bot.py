@@ -18,7 +18,7 @@ from aiogram.enums.parse_mode import ParseMode
 import text
 
 # Получение значений из раздела Bot
-API_TOKEN = '6537467286:AAFbaxUJz7h-mHumjiED02WG-jmvlvA5Acs'
+API_TOKEN = '6537467286:AAEvcun5hkKYD9INATC9_-wyw-iS33Y_6mw'
 
 # Диспетчер, бот
 dp = Dispatcher()
@@ -152,7 +152,7 @@ point_detail = {
 start_ikb = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='Пункты профилактики', callback_data='prevention_points')],
     [InlineKeyboardButton(text='Онлайн-услуги', callback_data='online-services')],
-    [InlineKeyboardButton(text='Связь с веб-аутрич', callback_data='web-outreach_communication')],
+    [InlineKeyboardButton(text='Связь с веб-аутрич', callback_data='outreach_communication')],
 ])
 
 cities_ikb = InlineKeyboardMarkup(inline_keyboard=[
@@ -206,7 +206,20 @@ specialists_ikb = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='Дружественный нарколог', url='https://t.me/pozitivniynarkolog', callback_data='specialist_narcol')],
     [InlineKeyboardButton(text='Нестигматизирующий  инфекционист', url='https://t.me/pozitivniydoctor', callback_data='specialist_infect')],
     [InlineKeyboardButton(text='Лояльный юрист', url='https://t.me/Anyagyl', callback_data='specialist_jurist')],
-    [InlineKeyboardButton(text='Заботливый хирург', url='https://t.me/pozitivniyhirurg', callback_data='specialist_surgeon')]
+    [InlineKeyboardButton(text='Заботливый хирург', url='https://t.me/pozitivniyhirurg', callback_data='specialist_surgeon')],
+    [InlineKeyboardButton(text='Назад', callback_data='back_start')]
+])
+
+outreach_ikb = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='НЛП-мастер, Менеджер Таня Ш', url='https://t.me/Solnce999', callback_data=None)],
+    [InlineKeyboardButton(text='Юр.помощь\Веб-аутрич Аня Г', url='https://t.me/Anyagyl', callback_data=None)],
+    [InlineKeyboardButton(text='Веб-аутрич Катя Р', url='https://t.me/katerosch', callback_data=None)],
+    [InlineKeyboardButton(text='Веб-аутрич Митя М', url='https://t.me/Nem_pad', callback_data=None)],
+    [InlineKeyboardButton(text='Веб-аутрич Игорь М', url='https://t.me/Web_Igor_M', callback_data=None)],
+    [InlineKeyboardButton(text='Веб-аутрич Артур П', url='https://t.me/Den_Gaag', callback_data=None)],
+    [InlineKeyboardButton(text='Веб-аутрич Егор К', url='https://t.me/flexxxLuthor', callback_data=None)],
+    [InlineKeyboardButton(text='Веб-аутрич Артур С', url='https://t.me/Kordanchik', callback_data=None)],
+    [InlineKeyboardButton(text='Назад', callback_data='back_start')]
 ])
 
 
@@ -292,6 +305,11 @@ async def city_point_handler(cb_query: CallbackQuery) -> None:
             await cb_query.message.answer(text=msg_text)
 
     await cb_query.message.answer(text=text.CONTINUE, reply_markup=ikb)
+
+
+@dp.callback_query(F.data == 'outreach_communication')
+async def outreach_handler(cb_query: CallbackQuery) -> None:
+    await cb_query.message.edit_text(text=text.OUTREACH, reply_markup=outreach_ikb)
 
 
 async def main():
