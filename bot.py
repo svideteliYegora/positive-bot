@@ -30,23 +30,184 @@ router = Router()
 
 logging.basicConfig(level=logging.INFO, stream=sys.stdout)
 
+
+
+# Словарь для статистики
+
+
+# keyboards
+start_ikb = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='Пункты профилактики', callback_data='prevention_points')],
+    [InlineKeyboardButton(text='Онлайн-услуги', callback_data='online-services')],
+    [InlineKeyboardButton(text='Связь с веб-аутрич', callback_data='outreach')],
+    [InlineKeyboardButton(text='Снижение вреда', callback_data='harm_reduction')]
+])
+
+drug_categories_ikb = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='Опиоиды', callback_data='opioids')],
+    [InlineKeyboardButton(text='Назад', callback_data='back_start')],
+])
+
+opioids_info_ikb = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='Общая информация', callback_data='opioids_general_inf')],
+    [InlineKeyboardButton(text='Что делать при передозировке?', callback_data='opioids_overdose')],
+    [InlineKeyboardButton(text='Снижение вреда', callback_data='opioids_harm_reduction')],
+    [InlineKeyboardButton(text='Назад', callback_data='back_drug-categories')]
+])
+
+opioids_general_inf_ikb = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='Что такое опиоиды?', callback_data='opioids_what-is-it')],
+    [InlineKeyboardButton(text='Как опиоиды работают?', callback_data='opioids_work')],
+    [InlineKeyboardButton(text='Налоксон', callback_data='opioids_naloxone')],
+    [InlineKeyboardButton(text='Как используются опиоиды?', callback_data='opioids_use')],
+    [InlineKeyboardButton(text='Терапия опиоидными агонистами', callback_data='opioids_therapy')],
+    [InlineKeyboardButton(text='Назад', callback_data='back_opioids-info')]
+])
+
+opioids_overdose_ikb = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='Снизьте риски передозировки', callback_data='opioids_risk-reduction')],
+    [InlineKeyboardButton(text='Признаки передозировки опиоидами', callback_data='opioids_overdose-signs')],
+    [InlineKeyboardButton(text='Если человек не реагирует?', callback_data='opioids_person-not-react')],
+    [InlineKeyboardButton(text='Первая помощь при передозировке опиоидами', callback_data='opioids_first-aid')],
+    [InlineKeyboardButton(text='Назад', callback_data='back_opioids-info')]
+])
+
+opioids_harm_reduction_ikb = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='Подготовить место для инъекции', callback_data='opioids_injection-site')],
+    [InlineKeyboardButton(text='Менять места инъекций', callback_data='opioids_prepare-injection-site')],
+    [InlineKeyboardButton(text='Уменьшить шансы передозировки', callback_data='opioids_reduce-chances')],
+    [InlineKeyboardButton(text='Назад', callback_data='back_opioids-info')]
+])
+
+opioids_work_ikb = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='Сердечно-легочная реанимация (СЛР) ', callback_data='opioids_slr')],
+    [InlineKeyboardButton(text='Налоксон', callback_data='opioids_naloxone2')],
+    [InlineKeyboardButton(text='Назад', callback_data='back_opioids-general-info')]
+])
+
+back_opioids_general_ikb = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='Назад', callback_data='opioids_overdose')]
+])
+
+back_opioids_work_ikb = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='Назад', callback_data='back_opioids-work')]
+])
+
+back_opioids_how_use_ikb = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='Назад', callback_data='back_opioids-how-use')]
+])
+
+back_opioids_overdose_ikb = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='Назад', callback_data='opioids_overdose')]
+])
+
+opioids_how_use_ikb = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='Терапия опиоидными агонистами', callback_data='opioids_therapy2')],
+    [InlineKeyboardButton(text='Связаться с наркологом', url='https://t.me/pozitivniynarkolog', callback_data='specialist_narcol')],
+    [InlineKeyboardButton(text='Назад', callback_data='back_opioids-general-info')]
+])
+
+opioids_first_aid_ikb = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='Налоксон', callback_data='opioids_naloxone3')],
+    [InlineKeyboardButton(text='Сердечно-легочная реанимация (СЛР) ', callback_data='opioids_slr2')],
+    [InlineKeyboardButton(text='Назад', callback_data='opioids_overdose')]
+])
+
+back_opioids_firs_aid_ikb = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='Назад', callback_data='opioids_first-aid')]
+])
+
+back_opioids_harm_reduction_ikb = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='Назад', callback_data='opioids_harm_reduction')]
+])
+
+
+
+cities_ikb = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='Минск', callback_data='city_minsk')],
+    [InlineKeyboardButton(text='Витебск', callback_data='city_vitebsk')],
+    [InlineKeyboardButton(text='Пинск', callback_data='city_pinsk')],
+    [InlineKeyboardButton(text='Барановичи', callback_data='city_baranovichi')],
+    [InlineKeyboardButton(text='Орша', callback_data='city_orsha')],
+    [InlineKeyboardButton(text='Светлогорск', callback_data='city_svetlogorsk')],
+    [InlineKeyboardButton(text='Назад', callback_data='back_start')]
+])
+
+minsk_ikb = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='Гл. офис (Левкова 20)', callback_data='point_minsk_main-office')],
+    [InlineKeyboardButton(text='Офис 2 (Ольшевского 76 А)', callback_data='point_minsk_office-2')],
+    [InlineKeyboardButton(text='Автобус 1', callback_data='point_minsk_bus-1')],
+    [InlineKeyboardButton(text='Автобус 2', callback_data='point_minsk_bus-2')],
+    [InlineKeyboardButton(text='Автобус 3', callback_data='point_minsk_bus-3')],
+    [InlineKeyboardButton(text='Назад', callback_data='back_cities')]
+])
+
+vitebsk_ikb = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='Офис 1 (Октябрьская 12)', callback_data='point_vitebsk_office-1')],
+    [InlineKeyboardButton(text='Офис 2 (Берестеня 15)', callback_data='point_vitebsk_office-2')],
+    [InlineKeyboardButton(text='Назад', callback_data='back_cities')]
+])
+
+pinsk_ikb = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='Офис 1 (Советская 7)', callback_data='point_pinsk_office-1')],
+    [InlineKeyboardButton(text='Автобус 1', callback_data='point_pinsk_bus-1')],
+    [InlineKeyboardButton(text='Назад', callback_data='back_cities')]
+])
+
+baranovichi_ikb = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='Офис 1 (3-й пер. Советский 3)', callback_data='point_baranovichi_office-1')],
+    [InlineKeyboardButton(text='Назад', callback_data='back_cities')]
+])
+
+orsha_ikb = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='Автобус 1', callback_data='point_orsha_bus-1')],
+    [InlineKeyboardButton(text='Назад', callback_data='back_cities')]
+])
+
+svetlogorsk_ikb = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='Офис 1 (м-н Первомайский 5)', callback_data='point_svetlogorsk_office-1')],
+    [InlineKeyboardButton(text='Назад', callback_data='back_cities')]
+])
+
+specialists_ikb = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='Позитивный психолог', url='https://t.me/pozitivniypsyholog', callback_data='specialist_psycho')],
+    [InlineKeyboardButton(text='Дружественный нарколог', url='https://t.me/pozitivniynarkolog', callback_data='specialist_narcol')],
+    [InlineKeyboardButton(text='Нестигматизирующий  инфекционист', url='https://t.me/pozitivniydoctor', callback_data='specialist_infect')],
+    [InlineKeyboardButton(text='Лояльный юрист', url='https://t.me/Anyagyl', callback_data='specialist_jurist')],
+    [InlineKeyboardButton(text='Заботливый хирург', url='https://t.me/pozitivniyhirurg', callback_data='specialist_surgeon')],
+    [InlineKeyboardButton(text='Назад', callback_data='back_start')]
+])
+
+outreach_ikb = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='НЛП-мастер, Менеджер Таня Ш', url='https://t.me/solnce0525', callback_data=None)],
+    [InlineKeyboardButton(text='Юр.помощь\Веб-аутрич Аня Г', url='https://t.me/Anyagyl', callback_data=None)],
+    [InlineKeyboardButton(text='Веб-аутрич Катя Р', url='https://t.me/katerosch', callback_data=None)],
+    [InlineKeyboardButton(text='Веб-аутрич Егор К', url='https://t.me/flexxxLuthor', callback_data=None)],
+    [InlineKeyboardButton(text='Веб-аутрич Митя М', url='https://t.me/nemaulatka', callback_data=None)],
+    [InlineKeyboardButton(text='Веб-аутрич Игорь М', url='https://t.me/Web_Igor_M', callback_data=None)],
+    [InlineKeyboardButton(text='Веб-аутрич Артур П', url='https://t.me/Den_Gaag', callback_data=None)],
+    [InlineKeyboardButton(text='Веб-аутрич Артур С', url='https://t.me/Kordanchik', callback_data=None)],
+    [InlineKeyboardButton(text='Назад', callback_data='back_start')]
+])
+
+
 # Словарь с фотографиями и текстом сообщений для каждого пункта
 point_detail = {
     'point_minsk_main-office': [
         {
             'photo_ids': [
-                'AgACAgIAAxkBAAIB82Z7tuTtNeLHdIefW0wDnxV0ZBtWAAJp3DEbscXgS5Y6PLmXUE2RAQADAgADeQADNQQ',
-                'AgACAgIAAxkBAAIB9WZ7tuhQEnzikK4-Und33lbIpoumAAJq3DEbscXgS5yaxSQZngAB1QEAAwIAA3kAAzUE',
-                'AgACAgIAAxkBAAIB92Z7tvDUZm0S3trdrkatLyWQwI8PAAJr3DEbscXgSwNPAWHx_7xZAQADAgADeQADNQQ',
-                'AgACAgIAAxkBAAIB-WZ7tvSzCyQLQDBtx3uxm9iBlyyoAAJs3DEbscXgSwP0JjjQqbrrAQADAgADeQADNQQ'
+                'AgACAgIAAxkBAAIFQWb8B6fvtGCmv8LXUCBDYBtuk7FGAAJP4TEbzebhS_yGIs_P4MTHAQADAgADeQADNgQ',
+                'AgACAgIAAxkBAAIFQ2b8B64UepFGBHigV9lCg9x3-yR_AAJQ4TEbzebhS3s3eYI4-5tFAQADAgADeQADNgQ',
+                'AgACAgIAAxkBAAIFRWb8B7OrJwvS2bwz_TwP-feMoNJpAAJR4TEbzebhSzTPcqmLAAGS6QEAAwIAA3kAAzYE',
+                'AgACAgIAAxkBAAIFR2b8B7jmymkp0z2xu3eEh2ZMcko1AAJS4TEbzebhS4Z4Z81zBloLAQADAgADeQADNgQ'
             ],
             'msg': text.STATIONARY_PREVENTION_CENTER_MNSK_LEVKOVA
         },
         {
             'photo_ids': [
-                'AgACAgIAAxkBAAIB7WZ7tm55Yjmt74CddAITCXo6Uz9DAAJi3DEbscXgS99qy9JguhJ1AQADAgADeQADNQQ',
-                'AgACAgIAAxkBAAIB72Z7tnEJ4EVGJIhZcAVpKhAvooYYAAJj3DEbscXgSzcwi496K_k3AQADAgADeQADNQQ',
-                'AgACAgIAAxkBAAIB8WZ7tnVJ0M8zsJ_7dWbe1I9XRwXoAAJl3DEbscXgS9hu6eRXpyxtAQADAgADeQADNQQ'
+                'AgACAgIAAxkBAAIFSmb8B8pozRh4zN0ZOW0AAUyUSMy6MQACU-ExG83m4Uvi71r1zpZhmwEAAwIAA3kAAzYE',
+                'AgACAgIAAxkBAAIFTGb8B87UmQcAAUkeHbFkWnJDLWTwmgACVOExG83m4Usw2NP9vQdaJAEAAwIAA3kAAzYE',
+                'AgACAgIAAxkBAAIFTmb8B9IaXGElTMAfEf2B256DrMlqAAJV4TEbzebhSwWg4nWRK1A2AQADAgADeQADNgQ'
             ],
             'msg': text.SOCIAL_SUPPORT_CENTER_MNSK_LEVKOVA
         }
@@ -151,82 +312,111 @@ point_detail = {
     ],
 }
 
-# Словарь для статистики
-
-
-# keyboards
-start_ikb = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text='Пункты профилактики', callback_data='prevention_points')],
-    [InlineKeyboardButton(text='Онлайн-услуги', callback_data='online-services')],
-    [InlineKeyboardButton(text='Связь с веб-аутрич', callback_data='outreach')],
-])
-
-cities_ikb = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text='Минск', callback_data='city_minsk')],
-    [InlineKeyboardButton(text='Витебск', callback_data='city_vitebsk')],
-    [InlineKeyboardButton(text='Пинск', callback_data='city_pinsk')],
-    [InlineKeyboardButton(text='Барановичи', callback_data='city_baranovichi')],
-    [InlineKeyboardButton(text='Орша', callback_data='city_orsha')],
-    [InlineKeyboardButton(text='Светлогорск', callback_data='city_svetlogorsk')],
-    [InlineKeyboardButton(text='Назад', callback_data='back_start')]
-])
-
-minsk_ikb = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text='Гл. офис (Левкова 20)', callback_data='point_minsk_main-office')],
-    [InlineKeyboardButton(text='Офис 2 (Ольшевского 76 А)', callback_data='point_minsk_office-2')],
-    [InlineKeyboardButton(text='Автобус 1', callback_data='point_minsk_bus-1')],
-    [InlineKeyboardButton(text='Автобус 2', callback_data='point_minsk_bus-2')],
-    [InlineKeyboardButton(text='Автобус 3', callback_data='point_minsk_bus-3')],
-    [InlineKeyboardButton(text='Назад', callback_data='back_cities')]
-])
-
-vitebsk_ikb = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text='Офис 1 (Октябрьская 12)', callback_data='point_vitebsk_office-1')],
-    [InlineKeyboardButton(text='Офис 2 (Берестеня 15)', callback_data='point_vitebsk_office-2')],
-    [InlineKeyboardButton(text='Назад', callback_data='back_cities')]
-])
-
-pinsk_ikb = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text='Офис 1 (Советская 7)', callback_data='point_pinsk_office-1')],
-    [InlineKeyboardButton(text='Автобус 1', callback_data='point_pinsk_bus-1')],
-    [InlineKeyboardButton(text='Назад', callback_data='back_cities')]
-])
-
-baranovichi_ikb = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text='Офис 1 (3-й пер. Советский 3)', callback_data='point_baranovichi_office-1')],
-    [InlineKeyboardButton(text='Назад', callback_data='back_cities')]
-])
-
-orsha_ikb = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text='Автобус 1', callback_data='point_orsha_bus-1')],
-    [InlineKeyboardButton(text='Назад', callback_data='back_cities')]
-])
-
-svetlogorsk_ikb = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text='Офис 1 (м-н Первомайский 5)', callback_data='point_svetlogorsk_office-1')],
-    [InlineKeyboardButton(text='Назад', callback_data='back_cities')]
-])
-
-specialists_ikb = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text='Позитивный психолог', url='https://t.me/pozitivniypsyholog', callback_data='specialist_psycho')],
-    [InlineKeyboardButton(text='Дружественный нарколог', url='https://t.me/pozitivniynarkolog', callback_data='specialist_narcol')],
-    [InlineKeyboardButton(text='Нестигматизирующий  инфекционист', url='https://t.me/pozitivniydoctor', callback_data='specialist_infect')],
-    [InlineKeyboardButton(text='Лояльный юрист', url='https://t.me/Anyagyl', callback_data='specialist_jurist')],
-    [InlineKeyboardButton(text='Заботливый хирург', url='https://t.me/pozitivniyhirurg', callback_data='specialist_surgeon')],
-    [InlineKeyboardButton(text='Назад', callback_data='back_start')]
-])
-
-outreach_ikb = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text='НЛП-мастер, Менеджер Таня Ш', url='https://t.me/Solnce999', callback_data=None)],
-    [InlineKeyboardButton(text='Юр.помощь\Веб-аутрич Аня Г', url='https://t.me/Anyagyl', callback_data=None)],
-    [InlineKeyboardButton(text='Веб-аутрич Катя Р', url='https://t.me/katerosch', callback_data=None)],
-    [InlineKeyboardButton(text='Веб-аутрич Егор К', url='https://t.me/flexxxLuthor', callback_data=None)],
-    [InlineKeyboardButton(text='Веб-аутрич Митя М', url='https://t.me/Nem_pad', callback_data=None)],
-    [InlineKeyboardButton(text='Веб-аутрич Игорь М', url='https://t.me/Web_Igor_M', callback_data=None)],
-    [InlineKeyboardButton(text='Веб-аутрич Артур П', url='https://t.me/Den_Gaag', callback_data=None)],
-    [InlineKeyboardButton(text='Веб-аутрич Артур С', url='https://t.me/Kordanchik', callback_data=None)],
-    [InlineKeyboardButton(text='Назад', callback_data='back_start')]
-])
+# Словарь с фотографиями и текстом для сообщений по категориям наркотиков
+drug_category_details = {
+    'opioids_what-is-it': {
+        'photo_ids': [
+            'AgACAgIAAxkBAAIFXGcE45uL9l4N8cIL4JC9bEJsXEuMAALl3DEbT-IoSHW3QThRGAm8AQADAgADeQADNgQ'
+        ],
+        'msg': text.OPIOIDS_AND_OPIATES,
+        'ikb': back_opioids_general_ikb
+        },
+    'opioids_work': {
+        'photo_ids': [
+        ],
+        'msg': text.OPIOIDS_WORK,
+        'ikb': opioids_work_ikb
+    },
+    'opioids_naloxone': {
+        'photo_ids': [
+            'AgACAgIAAxkBAAIFYGcE46BdVO9DeLZ-oQEGkDcaTBDMAALn3DEbT-IoSAtEHAzoO1ClAQADAgADeQADNgQ',
+        ],
+        'msg': text.OPIOIDS_NALOXONE,
+        'ikb': back_opioids_general_ikb
+    },
+    'opioids_naloxone2': {
+        'photo_ids': [
+            'AgACAgIAAxkBAAIFYGcE46BdVO9DeLZ-oQEGkDcaTBDMAALn3DEbT-IoSAtEHAzoO1ClAQADAgADeQADNgQ',
+        ],
+        'msg': text.OPIOIDS_NALOXONE,
+        'ikb': back_opioids_work_ikb
+    },
+    'opioids_slr': {
+        'photo_ids': [
+            'AgACAgIAAxkBAAIFXmcE457TvYxRCQTgKzjFv4dS7eH3AALm3DEbT-IoSMGrWz2c3lYYAQADAgADeQADNgQ',
+        ],
+        'msg': text.OPIOIDS_SLR,
+        'ikb': back_opioids_work_ikb
+    },
+    'opioids_use': {
+        'photo_ids': [],
+        'msg': text.OPIOIDS_HOW_USE,
+        'ikb': opioids_how_use_ikb
+    },
+    'opioids_therapy': {
+        'photo_ids': [],
+        'msg': text.OPIOIDS_THERAPY,
+        'ikb': back_opioids_general_ikb
+    },
+    'opioids_therapy2': {
+        'photo_ids': [],
+        'msg': text.OPIOIDS_THERAPY,
+        'ikb': back_opioids_how_use_ikb
+    },
+    'opioids_risk-reduction': {
+        'photo_ids': [],
+        'msg': text.OPIOIDS_REDUCE_RISK,
+        'ikb': back_opioids_overdose_ikb
+    },
+    'opioids_overdose-signs': {
+        'photo_ids': [],
+        'msg': text.OPIOIDS_OVERDOSE_SIGNS,
+        'ikb': back_opioids_overdose_ikb
+    },
+    'opioids_person-not-react': {
+        'photo_ids': [
+            'AgACAgIAAxkBAAIFYmcE46Ml3bK3QLrVmX2M0MIERhYNAALo3DEbT-IoSG8slWCXluhgAQADAgADeAADNgQ'
+        ],
+        'msg': text.OPIOIDS_PERSON_NOT_REACT,
+        'ikb': back_opioids_overdose_ikb
+    },
+    'opioids_first-aid': {
+        'photo_ids': [
+            'AgACAgIAAxkBAAIFZGcE46XXZoP0BNo4kqMhLIPT8ggKAALp3DEbT-IoSKUPqA2R34aXAQADAgADeQADNgQ'
+        ],
+        'msg': text.OPIOIDS_FIRST_AID,
+        'ikb': opioids_first_aid_ikb
+    },
+    'opioids_naloxone3': {
+        'photo_ids': [
+            'AgACAgIAAxkBAAIFYGcE46BdVO9DeLZ-oQEGkDcaTBDMAALn3DEbT-IoSAtEHAzoO1ClAQADAgADeQADNgQ',
+        ],
+        'msg': text.OPIOIDS_NALOXONE,
+        'ikb': back_opioids_firs_aid_ikb
+    },
+    'opioids_slr2': {
+        'photo_ids': [
+            'AgACAgIAAxkBAAP4ZvxccSJFeKbbk5dBMwxE_XwnhYYAAtLoMRv4BeFLR5XUF0o9Gh8BAAMCAAN5AAM2BA',
+        ],
+        'msg': text.OPIOIDS_SLR,
+        'ikb': back_opioids_firs_aid_ikb
+    },
+    'opioids_injection-site': {
+        'photo_ids': [],
+        'msg': text.OPIOIDS_INJECTION_SITE,
+        'ikb': back_opioids_harm_reduction_ikb
+    },
+    'opioids_prepare-injection-site': {
+        'photo_ids': [],
+        'msg': text.OPIOIDS_PREPARE_IJECTION_SITE,
+        'ikb': back_opioids_harm_reduction_ikb
+    },
+    'opioids_reduce-chances': {
+        'photo_ids': [],
+        'msg': text.OPIOIDS_REDUCE_CHANCES,
+        'ikb': back_opioids_harm_reduction_ikb
+    }
+}
 
 
 @router.message(F.photo)
@@ -244,14 +434,71 @@ async def cmd_statistic_handler(msg: Message) -> None:
     await msg.answer()
 
 
-@router.callback_query(F.data == 'prevention_points')
-async def prevention_points_handler(cb_query: CallbackQuery) -> None:
-    await cb_query.message.edit_text(text=text.CITY_SELECTION, reply_markup=cities_ikb)
+@router.callback_query(F.data.in_({'prevention_points', 'online-services', 'outreach', 'harm_reduction'}))
+async def services_handler(cb_query: CallbackQuery) -> None:
+    dt = cb_query.data
+
+    services = {
+        'prevention_points': [text.CITY_SELECTION, cities_ikb],
+        'online-services': [text.SERVICE_SELECTION, specialists_ikb],
+        'outreach': [text.OUTREACH, outreach_ikb],
+        'harm_reduction': [text.CATEGORY_SELECTION, drug_categories_ikb]
+    }
+    txt_msg, ikb = services[dt][0], services[dt][1]
+
+    await cb_query.message.edit_text(text=txt_msg, reply_markup=ikb)
 
 
-@router.callback_query(F.data == 'online-services')
-async def online_services_handler(cb_query: CallbackQuery) -> None:
-    await cb_query.message.edit_text(text=text.SERVICE_SELECTION, reply_markup=specialists_ikb)
+@router.callback_query(F.data.in_({'opioids',}))
+async def drug_categories_handler(cb_query: CallbackQuery) -> None:
+    dt = cb_query.data
+
+    drug_categories = {
+        'opioids': [text.SECTION_SELECTION.format('Опиоиды. '), opioids_info_ikb]
+    }
+    txt_msg, ikb = drug_categories[dt][0], drug_categories[dt][1]
+
+    await cb_query.message.edit_text(text=txt_msg, reply_markup=ikb)
+
+
+@router.callback_query(F.data.in_({'opioids_general_inf', 'opioids_overdose', 'opioids_harm_reduction'}))
+async def opioids_handler(cb_query: CallbackQuery) -> None:
+    dt = cb_query.data
+    opioids = 'Опиоиды. '
+    inf = {
+        'opioids_general_inf': [text.GENERAL_INFO.format(opioids), opioids_general_inf_ikb],
+        'opioids_overdose': [text.OVERDOSE.format(opioids), opioids_overdose_ikb],
+        'opioids_harm_reduction': [text.HARM_REDUCTION.format(opioids), opioids_harm_reduction_ikb]
+    }
+    txt_msg, ikb = inf[dt][0], inf[dt][1]
+    await cb_query.message.edit_text(text=txt_msg, reply_markup=ikb)
+
+
+@router.callback_query(F.data.in_({
+    'opioids_what-is-it', 'opioids_work', 'opioids_naloxone', 'opioids_naloxone2', 'opioids_use', 'opioids_therapy',
+    'opioids_therapy2', 'opioids_slr', 'opioids_risk-reduction', 'opioids_overdose-signs', 'opioids_person-not-react',
+    'opioids_first-aid', 'opioids_naloxone3', 'opioids_slr2', 'opioids_injection-site',
+    'opioids_prepare-injection-site', 'opioids_reduce-chances'
+}))
+async def opioid_general_inf_handler(cb_query: CallbackQuery) -> None:
+    dt = cb_query.data
+
+    await cb_query.message.delete()
+
+    # получаем текст и id изображения
+    drug_data = drug_category_details[dt]
+
+    msg_text = drug_data['msg']
+    photo_ids = drug_data['photo_ids']
+    ikb = drug_data['ikb']
+    if photo_ids:
+        media = [InputMediaPhoto(media=photo_ids[0], caption=msg_text, parse_mode='HTML')]
+        for photo_id in photo_ids[1:]:
+            media.append(InputMediaPhoto(media=photo_id))
+        await cb_query.bot.send_media_group(cb_query.from_user.id, media, )
+        await cb_query.message.answer(text=text.SELECT_ACTION, reply_markup=ikb)
+    else:
+        await cb_query.message.answer(text=msg_text, reply_markup=ikb)
 
 
 @router.callback_query(F.data.startswith('continue'))
@@ -267,7 +514,6 @@ async def cities_handler(cb_query: CallbackQuery) -> None:
         'svetlogorsk': svetlogorsk_ikb
     }
     ikb = ikb_dict[city]
-
     await cb_query.message.edit_text(text=text.POINT_SELECTION, reply_markup=ikb)
 
 
@@ -277,13 +523,16 @@ async def back_handler(cb_query: CallbackQuery) -> None:
 
     data = {
         'cities': [text.CITY_SELECTION, cities_ikb],
-        'start': [text.WELCOME, start_ikb]
+        'start': [text.WELCOME, start_ikb],
+        'drug-categories': [text.CATEGORY_SELECTION, drug_categories_ikb],
+        'opioids-info': [text.SECTION_SELECTION.format('Опиоиды. '), opioids_info_ikb],
+        'opioids-work': [text.OPIOIDS_WORK, opioids_work_ikb],
+        'opioids-how-use': [text.OPIOIDS_HOW_USE, opioids_how_use_ikb],
     }
-
-    point = data[cb_data]
-    msg_text = point[0]
-    ikb = point[1]
-
+    print(cb_query.data)
+    print(data)
+    print(cb_data)
+    msg_text, ikb = data[cb_data][0], data[cb_data][1]
     await cb_query.message.edit_text(text=msg_text, reply_markup=ikb)
 
 
@@ -309,13 +558,8 @@ async def city_point_handler(cb_query: CallbackQuery) -> None:
             await cb_query.bot.send_media_group(cb_query.from_user.id, media, )
         else:
             await cb_query.message.answer(text=msg_text)
-
     await cb_query.message.answer(text=text.CONTINUE, reply_markup=ikb)
 
-
-@router.callback_query(F.data.startswith('outreach'))
-async def outreach_handler(cb_query: CallbackQuery) -> None:
-    await cb_query.message.edit_text(text=text.OUTREACH, reply_markup=outreach_ikb)
 
 
 async def on_startup(bot: Bot):
