@@ -35,6 +35,7 @@ logging.basicConfig(level=logging.INFO, stream=sys.stdout)
 # Словарь для статистики
 
 
+
 # keyboards
 start_ikb = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='Пункты профилактики', callback_data='prevention_points')],
@@ -49,7 +50,7 @@ drug_categories_ikb = InlineKeyboardMarkup(inline_keyboard=[
 ])
 
 opioids_info_ikb = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text='Общая информация', callback_data='opioids_general_inf')],
+    [InlineKeyboardButton(text='Общая информация', callback_data='opioids_general-inf')],
     [InlineKeyboardButton(text='Что делать при передозировке?', callback_data='opioids_overdose')],
     [InlineKeyboardButton(text='Снижение вреда', callback_data='opioids_harm_reduction')],
     [InlineKeyboardButton(text='Назад', callback_data='back_drug-categories')]
@@ -82,11 +83,11 @@ opioids_harm_reduction_ikb = InlineKeyboardMarkup(inline_keyboard=[
 opioids_work_ikb = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='Сердечно-легочная реанимация (СЛР) ', callback_data='opioids_slr')],
     [InlineKeyboardButton(text='Налоксон', callback_data='opioids_naloxone2')],
-    [InlineKeyboardButton(text='Назад', callback_data='back_opioids-general-info')]
+    [InlineKeyboardButton(text='Назад', callback_data='back_opioids-general-inf')]
 ])
 
 back_opioids_general_ikb = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text='Назад', callback_data='opioids_overdose')]
+    [InlineKeyboardButton(text='Назад', callback_data='back_opioids-general-inf')]
 ])
 
 back_opioids_work_ikb = InlineKeyboardMarkup(inline_keyboard=[
@@ -104,7 +105,7 @@ back_opioids_overdose_ikb = InlineKeyboardMarkup(inline_keyboard=[
 opioids_how_use_ikb = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='Терапия опиоидными агонистами', callback_data='opioids_therapy2')],
     [InlineKeyboardButton(text='Связаться с наркологом', url='https://t.me/pozitivniynarkolog', callback_data='specialist_narcol')],
-    [InlineKeyboardButton(text='Назад', callback_data='back_opioids-general-info')]
+    [InlineKeyboardButton(text='Назад', callback_data='back_opioids-general-inf')]
 ])
 
 opioids_first_aid_ikb = InlineKeyboardMarkup(inline_keyboard=[
@@ -396,7 +397,7 @@ drug_category_details = {
     },
     'opioids_slr2': {
         'photo_ids': [
-            'AgACAgIAAxkBAAP4ZvxccSJFeKbbk5dBMwxE_XwnhYYAAtLoMRv4BeFLR5XUF0o9Gh8BAAMCAAN5AAM2BA',
+            'AgACAgIAAxkBAAIFXmcE457TvYxRCQTgKzjFv4dS7eH3AALm3DEbT-IoSMGrWz2c3lYYAQADAgADeQADNgQ',
         ],
         'msg': text.OPIOIDS_SLR,
         'ikb': back_opioids_firs_aid_ikb
@@ -437,7 +438,6 @@ async def cmd_statistic_handler(msg: Message) -> None:
 @router.callback_query(F.data.in_({'prevention_points', 'online-services', 'outreach', 'harm_reduction'}))
 async def services_handler(cb_query: CallbackQuery) -> None:
     dt = cb_query.data
-
     services = {
         'prevention_points': [text.CITY_SELECTION, cities_ikb],
         'online-services': [text.SERVICE_SELECTION, specialists_ikb],
@@ -445,7 +445,6 @@ async def services_handler(cb_query: CallbackQuery) -> None:
         'harm_reduction': [text.CATEGORY_SELECTION, drug_categories_ikb]
     }
     txt_msg, ikb = services[dt][0], services[dt][1]
-
     await cb_query.message.edit_text(text=txt_msg, reply_markup=ikb)
 
 
@@ -461,12 +460,12 @@ async def drug_categories_handler(cb_query: CallbackQuery) -> None:
     await cb_query.message.edit_text(text=txt_msg, reply_markup=ikb)
 
 
-@router.callback_query(F.data.in_({'opioids_general_inf', 'opioids_overdose', 'opioids_harm_reduction'}))
+@router.callback_query(F.data.in_({'opioids_general-inf', 'opioids_overdose', 'opioids_harm_reduction'}))
 async def opioids_handler(cb_query: CallbackQuery) -> None:
     dt = cb_query.data
     opioids = 'Опиоиды. '
     inf = {
-        'opioids_general_inf': [text.GENERAL_INFO.format(opioids), opioids_general_inf_ikb],
+        'opioids_general-inf': [text.GENERAL_INFO.format(opioids), opioids_general_inf_ikb],
         'opioids_overdose': [text.OVERDOSE.format(opioids), opioids_overdose_ikb],
         'opioids_harm_reduction': [text.HARM_REDUCTION.format(opioids), opioids_harm_reduction_ikb]
     }
@@ -528,10 +527,10 @@ async def back_handler(cb_query: CallbackQuery) -> None:
         'opioids-info': [text.SECTION_SELECTION.format('Опиоиды. '), opioids_info_ikb],
         'opioids-work': [text.OPIOIDS_WORK, opioids_work_ikb],
         'opioids-how-use': [text.OPIOIDS_HOW_USE, opioids_how_use_ikb],
+        'opioids-general-inf': [text.GENERAL_INFO.format('Опиоиды. '), opioids_general_inf_ikb],
+
     }
-    print(cb_query.data)
-    print(data)
-    print(cb_data)
+
     msg_text, ikb = data[cb_data][0], data[cb_data][1]
     await cb_query.message.edit_text(text=msg_text, reply_markup=ikb)
 
@@ -559,7 +558,6 @@ async def city_point_handler(cb_query: CallbackQuery) -> None:
         else:
             await cb_query.message.answer(text=msg_text)
     await cb_query.message.answer(text=text.CONTINUE, reply_markup=ikb)
-
 
 
 async def on_startup(bot: Bot):
