@@ -123,7 +123,6 @@ back_opioids_harm_reduction_ikb = InlineKeyboardMarkup(inline_keyboard=[
 ])
 
 
-
 cities_ikb = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='Минск', callback_data='city_minsk')],
     [InlineKeyboardButton(text='Витебск', callback_data='city_vitebsk')],
@@ -136,7 +135,7 @@ cities_ikb = InlineKeyboardMarkup(inline_keyboard=[
 
 minsk_ikb = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='Гл. офис (Левкова 20)', callback_data='point_minsk_main-office')],
-    [InlineKeyboardButton(text='Офис 2 (Ольшевского 76 А)', callback_data='point_minsk_office-2')],
+    [InlineKeyboardButton(text='Офис 2 (ул. Янки Мавра, 22А)', callback_data='point_minsk_office-2')],
     [InlineKeyboardButton(text='Автобус 1', callback_data='point_minsk_bus-1')],
     [InlineKeyboardButton(text='Автобус 2', callback_data='point_minsk_bus-2')],
     [InlineKeyboardButton(text='Автобус 3', callback_data='point_minsk_bus-3')],
@@ -216,13 +215,10 @@ point_detail = {
     'point_minsk_office-2': [
         {
             'photo_ids': [
-                'AgACAgIAAxkBAAICDGZ7uU3XEFoBsL123zNxGJA__L8CAAJ53DEbscXgSz3qxRnGKBJSAQADAgADeQADNQQ',
-                'AgACAgIAAxkBAAICDmZ7uVcpq1rGjXPZj8acmiKz7JnHAAJ63DEbscXgS7vHUMTeg-4gAQADAgADeQADNQQ',
-                'AgACAgIAAxkBAAICEGZ7uV1IssPUrVg1MXrnkxKgC-CFAAJ73DEbscXgS502K9tDbEEZAQADAgADeQADNQQ',
-                'AgACAgIAAxkBAAICEmZ7uWE5Wha0Lz8k8omot2aZaqZJAAJ83DEbscXgS1qvFxYFmuLzAQADAgADeQADNQQ',
-                'AgACAgIAAxkBAAICFGZ7uWn-NMxTLpcXcdlAW_aCInQmAAJ93DEbscXgS2E50UmXunfqAQADAgADeQADNQQ'
+                'AgACAgIAAxkBAAIGVGdYZwXvTOYmFSNpxW3Kk8nLE_HwAAKI7jEbG4HISgIeFs6PGAAB3wEAAwIAA3kAAzYE',
+                'AgACAgIAAxkBAAIGVmdYZwqnagYXEOWRmjFtRkv30pmxAAKK7jEbG4HISnWLZ_X74hYZAQADAgADeQADNgQ'
             ],
-            'msg': text.STATIONARY_PREVENTION_CENTER_MNSK_OLSHEVSKOGO
+            'msg': text.STATIONARY_PREVENTION_CENTER_MNSK_MAVRA
         }
     ],
     'point_minsk_bus-1': [
