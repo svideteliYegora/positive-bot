@@ -41,13 +41,44 @@ start_ikb = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='Пункты профилактики', callback_data='prevention_points')],
     [InlineKeyboardButton(text='Онлайн-услуги', callback_data='online-services')],
     [InlineKeyboardButton(text='Связь с веб-аутрич', callback_data='outreach')],
-    [InlineKeyboardButton(text='Снижение вреда', callback_data='harm_reduction')]
+    [InlineKeyboardButton(text='Снижение вреда', callback_data='harm_reduction')],
+    [InlineKeyboardButton(text='Дисклеймер', callback_data='disclaimer')]
 ])
 
 drug_categories_ikb = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='Опиоиды', callback_data='opioids')],
+    [InlineKeyboardButton(text='Стимуляторы', callback_data='stimulants')],
     [InlineKeyboardButton(text='Назад', callback_data='back_start')],
 ])
+
+stimulants_info_ikb = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='Общая информация', callback_data='stimulants_general-inf')],
+    [InlineKeyboardButton(text='Снижение вреда', callback_data='stimulants_harm_reduction')],
+    [InlineKeyboardButton(text='Оверампинг (передозировка стимуляторами): что делать?',
+                          callback_data='stimulants_overamping')],
+    [InlineKeyboardButton(text='Как выходить из употребления с минимальными потерями?',
+                          callback_data='stimulants_how-to-retire')],
+    [InlineKeyboardButton(text='как общаться с человеком в психозе, чтобы не усугубить',
+                          callback_data='stimulants_de--escalation-techniques')],
+    [InlineKeyboardButton(text='Назад', callback_data='back_drug-categories')]
+])
+
+stimulants_general_info_ikb = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='Что такое стимуляторы?', callback_data='stimulants_what-is-it')],
+    [InlineKeyboardButton(text='Способы употребления и их риски?', callback_data='stimulants_how-to-use')],
+    [InlineKeyboardButton(text='Побочные эффекты и риски', callback_data='stimulants_side-effects')],
+    [InlineKeyboardButton(text='Назад', callback_data='back_stimulants-section-inf')]
+])
+
+
+back_stimulants_section_ikb = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='Назад', callback_data='back_stimulants-section-inf')]
+])
+
+back_stimulants_general_ikb = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text='Назад', callback_data='back_stimulants-general-inf')]
+])
+
 
 opioids_info_ikb = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='Общая информация', callback_data='opioids_general-inf')],
@@ -121,6 +152,8 @@ back_opioids_firs_aid_ikb = InlineKeyboardMarkup(inline_keyboard=[
 back_opioids_harm_reduction_ikb = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='Назад', callback_data='opioids_harm_reduction')]
 ])
+
+
 
 
 cities_ikb = InlineKeyboardMarkup(inline_keyboard=[
@@ -313,7 +346,7 @@ point_detail = {
 drug_category_details = {
     'opioids_what-is-it': {
         'photo_ids': [
-            'AgACAgIAAxkBAAIFXGcE45uL9l4N8cIL4JC9bEJsXEuMAALl3DEbT-IoSHW3QThRGAm8AQADAgADeQADNgQ'
+            'AgACAgIAAxkBAAOTZvwV1LkKYbzgtxfmopYXrt7JIHIAAmvmMRv4BeFL0wz0NMPPNFsBAAMCAAN5AAM2BA'
         ],
         'msg': text.OPIOIDS_AND_OPIATES,
         'ikb': back_opioids_general_ikb
@@ -326,21 +359,21 @@ drug_category_details = {
     },
     'opioids_naloxone': {
         'photo_ids': [
-            'AgACAgIAAxkBAAIFYGcE46BdVO9DeLZ-oQEGkDcaTBDMAALn3DEbT-IoSAtEHAzoO1ClAQADAgADeQADNgQ',
+            'AgACAgIAAxkBAAPcZvxYXbs2gDlv2esrG6jylH7Na_gAArboMRv4BeFLBDHnOG_HyhsBAAMCAAN5AAM2BA',
         ],
         'msg': text.OPIOIDS_NALOXONE,
         'ikb': back_opioids_general_ikb
     },
     'opioids_naloxone2': {
         'photo_ids': [
-            'AgACAgIAAxkBAAIFYGcE46BdVO9DeLZ-oQEGkDcaTBDMAALn3DEbT-IoSAtEHAzoO1ClAQADAgADeQADNgQ',
+            'AgACAgIAAxkBAAPcZvxYXbs2gDlv2esrG6jylH7Na_gAArboMRv4BeFLBDHnOG_HyhsBAAMCAAN5AAM2BA',
         ],
         'msg': text.OPIOIDS_NALOXONE,
         'ikb': back_opioids_work_ikb
     },
     'opioids_slr': {
         'photo_ids': [
-            'AgACAgIAAxkBAAIFXmcE457TvYxRCQTgKzjFv4dS7eH3AALm3DEbT-IoSMGrWz2c3lYYAQADAgADeQADNgQ',
+            'AgACAgIAAxkBAAP4ZvxccSJFeKbbk5dBMwxE_XwnhYYAAtLoMRv4BeFLR5XUF0o9Gh8BAAMCAAN5AAM2BA',
         ],
         'msg': text.OPIOIDS_SLR,
         'ikb': back_opioids_work_ikb
@@ -372,28 +405,28 @@ drug_category_details = {
     },
     'opioids_person-not-react': {
         'photo_ids': [
-            'AgACAgIAAxkBAAIFYmcE46Ml3bK3QLrVmX2M0MIERhYNAALo3DEbT-IoSG8slWCXluhgAQADAgADeAADNgQ'
+            'AgACAgIAAxkBAAICbmcDrksfnghpQDv5CbyStZ95mCu1AAKI5jEbK28hSMz4MqunquCjAQADAgADeAADNgQ'
         ],
         'msg': text.OPIOIDS_PERSON_NOT_REACT,
         'ikb': back_opioids_overdose_ikb
     },
     'opioids_first-aid': {
         'photo_ids': [
-            'AgACAgIAAxkBAAIFZGcE46XXZoP0BNo4kqMhLIPT8ggKAALp3DEbT-IoSKUPqA2R34aXAQADAgADeQADNgQ'
+            'AgACAgIAAxkBAAICgGcDsF5W6Uyx93G1X8WJA8_UVqDDAAKQ5jEbK28hSFrNd0stOPNHAQADAgADeQADNgQ'
         ],
         'msg': text.OPIOIDS_FIRST_AID,
         'ikb': opioids_first_aid_ikb
     },
     'opioids_naloxone3': {
         'photo_ids': [
-            'AgACAgIAAxkBAAIFYGcE46BdVO9DeLZ-oQEGkDcaTBDMAALn3DEbT-IoSAtEHAzoO1ClAQADAgADeQADNgQ',
+            'AgACAgIAAxkBAAPcZvxYXbs2gDlv2esrG6jylH7Na_gAArboMRv4BeFLBDHnOG_HyhsBAAMCAAN5AAM2BA',
         ],
         'msg': text.OPIOIDS_NALOXONE,
         'ikb': back_opioids_firs_aid_ikb
     },
     'opioids_slr2': {
         'photo_ids': [
-            'AgACAgIAAxkBAAIFXmcE457TvYxRCQTgKzjFv4dS7eH3AALm3DEbT-IoSMGrWz2c3lYYAQADAgADeQADNgQ',
+            'AgACAgIAAxkBAAP4ZvxccSJFeKbbk5dBMwxE_XwnhYYAAtLoMRv4BeFLR5XUF0o9Gh8BAAMCAAN5AAM2BA',
         ],
         'msg': text.OPIOIDS_SLR,
         'ikb': back_opioids_firs_aid_ikb
@@ -412,6 +445,21 @@ drug_category_details = {
         'photo_ids': [],
         'msg': text.OPIOIDS_REDUCE_CHANCES,
         'ikb': back_opioids_harm_reduction_ikb
+    },
+    'stimulants_what-is-it': {
+        'photo_ids': ['AgACAgIAAxkBAAIHWGjbxy2J8GRx3tuxEy6GocbTte9LAALS9jEb2W3hShoznPIip5EPAQADAgADeQADNgQ'],
+        'msg': text.STIMULANTS_WHAT_IS_IT,
+        'ikb': back_stimulants_general_ikb
+    },
+    'stimulants_how-to-use': {
+        'photo_ids': [],
+        'msg': text.STIMULANTS_HOW_USE,
+        'ikb': back_stimulants_general_ikb
+    },
+    'stimulants_side-effects': {
+        'photo_ids': [],
+        'msg': text.STIMULANTS_SIDE_EFFECTS,
+        'ikb': back_stimulants_general_ikb
     }
 }
 
@@ -444,26 +492,71 @@ async def services_handler(cb_query: CallbackQuery) -> None:
     await cb_query.message.edit_text(text=txt_msg, reply_markup=ikb)
 
 
-@router.callback_query(F.data.in_({'opioids',}))
+@router.callback_query(F.data.in_({'opioids', 'stimulants'}))
 async def drug_categories_handler(cb_query: CallbackQuery) -> None:
     dt = cb_query.data
 
     drug_categories = {
-        'opioids': [text.SECTION_SELECTION.format('Опиоиды. '), opioids_info_ikb]
+        'opioids': [text.SECTION_SELECTION.format('Опиоиды. '), opioids_info_ikb],
+        'stimulants': [text.SECTION_SELECTION.format('Стимуляторы. '), stimulants_info_ikb]
     }
     txt_msg, ikb = drug_categories[dt][0], drug_categories[dt][1]
 
     await cb_query.message.edit_text(text=txt_msg, reply_markup=ikb)
 
 
-@router.callback_query(F.data.in_({'opioids_general-inf', 'opioids_overdose', 'opioids_harm_reduction'}))
+@router.callback_query(F.data.in_({
+    'stimulants_general-inf', 'stimulants_harm_reduction', 'stimulants_overamping', 'stimulants_how-to-retire',
+    'stimulants_de--escalation-techniques'
+                                   }))
+async def stimulants_handler(cb_query: CallbackQuery) -> None:
+    dt = cb_query.data
+    stimulants = 'Стимуляторы. '
+    inf = {
+        'stimulants_general-inf': [text.GENERAL_INFO.format(stimulants), stimulants_general_info_ikb],
+        'stimulants_harm_reduction': [text.HARM_REDUCTION.format(stimulants) + text.STIMULANT_HARM_REDUCTION,
+                                      back_stimulants_section_ikb],
+        'stimulants_overamping': [text.STIMULANT_OVERAMPING, back_stimulants_section_ikb],
+        'stimulants_how-to-retire': [text.STIMULANT_HOW_TO_RETIRE, back_stimulants_section_ikb],
+        'stimulants_de--escalation-techniques': [text.STIMULANTS_DE_ESCALATION_TECHNIQUES, back_stimulants_section_ikb],
+    }
+    txt_msg, ikb = inf[dt][0], inf[dt][1]
+    await cb_query.message.edit_text(text=txt_msg, reply_markup=ikb)
+
+
+@router.callback_query(F.data.in_({
+    'stimulants_what-is-it', 'stimulants_how-to-use', 'stimulants_side-effects'}))
+async def stimulants_general_inf_handler(cb_query: CallbackQuery) -> None:
+    dt = cb_query.data
+
+    await cb_query.message.delete()
+
+    # получаем текст и id изображения
+    drug_data = drug_category_details[dt]
+
+    msg_text = drug_data['msg']
+    photo_ids = drug_data['photo_ids']
+    ikb = drug_data['ikb']
+    if photo_ids:
+        media = [InputMediaPhoto(media=photo_ids[0], caption=msg_text, parse_mode='HTML')]
+        for photo_id in photo_ids[1:]:
+            media.append(InputMediaPhoto(media=photo_id))
+        await cb_query.bot.send_media_group(cb_query.from_user.id, media, )
+        await cb_query.message.answer(text=text.SELECT_ACTION, reply_markup=ikb)
+    else:
+        await cb_query.message.answer(text=msg_text, reply_markup=ikb)
+
+
+@router.callback_query(F.data.in_({
+    'opioids_general-inf', 'opioids_overdose', 'opioids_harm_reduction'
+                                   }))
 async def opioids_handler(cb_query: CallbackQuery) -> None:
     dt = cb_query.data
     opioids = 'Опиоиды. '
     inf = {
         'opioids_general-inf': [text.GENERAL_INFO.format(opioids), opioids_general_inf_ikb],
         'opioids_overdose': [text.OVERDOSE.format(opioids), opioids_overdose_ikb],
-        'opioids_harm_reduction': [text.HARM_REDUCTION.format(opioids), opioids_harm_reduction_ikb]
+        'opioids_harm_reduction': [text.HARM_REDUCTION.format(opioids), opioids_harm_reduction_ikb],
     }
     txt_msg, ikb = inf[dt][0], inf[dt][1]
     await cb_query.message.edit_text(text=txt_msg, reply_markup=ikb)
@@ -524,9 +617,9 @@ async def back_handler(cb_query: CallbackQuery) -> None:
         'opioids-work': [text.OPIOIDS_WORK, opioids_work_ikb],
         'opioids-how-use': [text.OPIOIDS_HOW_USE, opioids_how_use_ikb],
         'opioids-general-inf': [text.GENERAL_INFO.format('Опиоиды. '), opioids_general_inf_ikb],
-
+        'stimulants-section-inf': [text.SECTION_SELECTION.format('Стимуляторы. '), stimulants_info_ikb],
+        'stimulants-general-inf': [text.GENERAL_INFO.format('Стимуляторы. '), stimulants_general_info_ikb]
     }
-
     msg_text, ikb = data[cb_data][0], data[cb_data][1]
     await cb_query.message.edit_text(text=msg_text, reply_markup=ikb)
 
@@ -554,6 +647,12 @@ async def city_point_handler(cb_query: CallbackQuery) -> None:
         else:
             await cb_query.message.answer(text=msg_text)
     await cb_query.message.answer(text=text.CONTINUE, reply_markup=ikb)
+
+
+@router.callback_query(F.data == 'disclaimer')
+async def disclaimer_handler(cb_query: CallbackQuery) -> None:
+    ikb = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text='Назад', callback_data='back_start')]])
+    await cb_query.message.edit_text(text=text.DISCLAIMER, reply_markup=ikb)
 
 
 async def on_startup(bot: Bot):
