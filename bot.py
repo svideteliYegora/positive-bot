@@ -346,7 +346,7 @@ point_detail = {
 drug_category_details = {
     'opioids_what-is-it': {
         'photo_ids': [
-            'AgACAgIAAxkBAAOTZvwV1LkKYbzgtxfmopYXrt7JIHIAAmvmMRv4BeFL0wz0NMPPNFsBAAMCAAN5AAM2BA'
+            'AgACAgIAAxkBAAIFXGcE45uL9l4N8cIL4JC9bEJsXEuMAALl3DEbT-IoSHW3QThRGAm8AQADAgADeQADNgQ'
         ],
         'msg': text.OPIOIDS_AND_OPIATES,
         'ikb': back_opioids_general_ikb
@@ -359,21 +359,21 @@ drug_category_details = {
     },
     'opioids_naloxone': {
         'photo_ids': [
-            'AgACAgIAAxkBAAPcZvxYXbs2gDlv2esrG6jylH7Na_gAArboMRv4BeFLBDHnOG_HyhsBAAMCAAN5AAM2BA',
+            'AgACAgIAAxkBAAIFYGcE46BdVO9DeLZ-oQEGkDcaTBDMAALn3DEbT-IoSAtEHAzoO1ClAQADAgADeQADNgQ',
         ],
         'msg': text.OPIOIDS_NALOXONE,
         'ikb': back_opioids_general_ikb
     },
     'opioids_naloxone2': {
         'photo_ids': [
-            'AgACAgIAAxkBAAPcZvxYXbs2gDlv2esrG6jylH7Na_gAArboMRv4BeFLBDHnOG_HyhsBAAMCAAN5AAM2BA',
+            'AgACAgIAAxkBAAIFYGcE46BdVO9DeLZ-oQEGkDcaTBDMAALn3DEbT-IoSAtEHAzoO1ClAQADAgADeQADNgQ',
         ],
         'msg': text.OPIOIDS_NALOXONE,
         'ikb': back_opioids_work_ikb
     },
     'opioids_slr': {
         'photo_ids': [
-            'AgACAgIAAxkBAAP4ZvxccSJFeKbbk5dBMwxE_XwnhYYAAtLoMRv4BeFLR5XUF0o9Gh8BAAMCAAN5AAM2BA',
+            'AgACAgIAAxkBAAIFXmcE457TvYxRCQTgKzjFv4dS7eH3AALm3DEbT-IoSMGrWz2c3lYYAQADAgADeQADNgQ',
         ],
         'msg': text.OPIOIDS_SLR,
         'ikb': back_opioids_work_ikb
@@ -405,28 +405,28 @@ drug_category_details = {
     },
     'opioids_person-not-react': {
         'photo_ids': [
-            'AgACAgIAAxkBAAICbmcDrksfnghpQDv5CbyStZ95mCu1AAKI5jEbK28hSMz4MqunquCjAQADAgADeAADNgQ'
+            'AgACAgIAAxkBAAIFYmcE46Ml3bK3QLrVmX2M0MIERhYNAALo3DEbT-IoSG8slWCXluhgAQADAgADeAADNgQ'
         ],
         'msg': text.OPIOIDS_PERSON_NOT_REACT,
         'ikb': back_opioids_overdose_ikb
     },
     'opioids_first-aid': {
         'photo_ids': [
-            'AgACAgIAAxkBAAICgGcDsF5W6Uyx93G1X8WJA8_UVqDDAAKQ5jEbK28hSFrNd0stOPNHAQADAgADeQADNgQ'
+            'AgACAgIAAxkBAAIFZGcE46XXZoP0BNo4kqMhLIPT8ggKAALp3DEbT-IoSKUPqA2R34aXAQADAgADeQADNgQ'
         ],
         'msg': text.OPIOIDS_FIRST_AID,
         'ikb': opioids_first_aid_ikb
     },
     'opioids_naloxone3': {
         'photo_ids': [
-            'AgACAgIAAxkBAAPcZvxYXbs2gDlv2esrG6jylH7Na_gAArboMRv4BeFLBDHnOG_HyhsBAAMCAAN5AAM2BA',
+            'AgACAgIAAxkBAAIFYGcE46BdVO9DeLZ-oQEGkDcaTBDMAALn3DEbT-IoSAtEHAzoO1ClAQADAgADeQADNgQ',
         ],
         'msg': text.OPIOIDS_NALOXONE,
         'ikb': back_opioids_firs_aid_ikb
     },
     'opioids_slr2': {
         'photo_ids': [
-            'AgACAgIAAxkBAAP4ZvxccSJFeKbbk5dBMwxE_XwnhYYAAtLoMRv4BeFLR5XUF0o9Gh8BAAMCAAN5AAM2BA',
+            'AgACAgIAAxkBAAIFXmcE457TvYxRCQTgKzjFv4dS7eH3AALm3DEbT-IoSMGrWz2c3lYYAQADAgADeQADNgQ',
         ],
         'msg': text.OPIOIDS_SLR,
         'ikb': back_opioids_firs_aid_ikb
