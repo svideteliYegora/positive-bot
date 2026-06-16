@@ -1,3 +1,7 @@
+from importlib import reload
+import dynamic_news
+from aiogram.fsm.state import State, StatesGroup
+from aiogram.fsm.context import FSMContext
 import logging
 import os
 import sys
@@ -30,20 +34,51 @@ router = Router()
 
 logging.basicConfig(level=logging.INFO, stream=sys.stdout)
 
+# Список ID админов
+ADMIN_IDS = [7054178301]
+
+
+# Класс состояний для админ-функций
+class AdminStates(StatesGroup):
+    waiting_for_news = State()  # состояние ожидания текста новостей
+
+
+def save_news_text(new_text: str):
+    """Сохраняет новый текст новостей в файл dynamic_news.py"""
+    with open("dynamic_news.py", 'w', encoding='utf-8') as f:
+        f.write(f'NEWS_TEXT = """{new_text}"""')
 
 
 # Словарь для статистики
 
 
-
 # keyboards
-start_ikb = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text='Пункты профилактики', callback_data='prevention_points')],
-    [InlineKeyboardButton(text='Онлайн-услуги', callback_data='online-services')],
-    [InlineKeyboardButton(text='Связь с веб-аутрич', callback_data='outreach')],
-    [InlineKeyboardButton(text='Снижение вреда', callback_data='harm_reduction')],
-    [InlineKeyboardButton(text='Дисклеймер', callback_data='disclaimer')]
-])
+# start_ikb = InlineKeyboardMarkup(inline_keyboard=[
+#     [InlineKeyboardButton(text='📢 Новости и анонсы', callback_data='menu_news')],
+#     [InlineKeyboardButton(text='📍 Пункты профилактики', callback_data='prevention_points')],
+#     [InlineKeyboardButton(text='🧑‍⚕️ Онлайн-услуги', callback_data='online-services')],
+#     [InlineKeyboardButton(text='🌐 Связь с веб-аутрич', callback_data='outreach')],
+#     [InlineKeyboardButton(text='🛡️ Снижение вреда', callback_data='harm_reduction')],
+#     [InlineKeyboardButton(text='⚠️ Дисклеймер', callback_data='disclaimer')]
+# ])
+
+
+def get_start_ikb(user_id: int):
+    """Возвращает клавиатуру с админ-кнопкой, если пользователь — админ"""
+    keyboard = [
+        [InlineKeyboardButton(text='📢 Новости и анонсы', callback_data='menu_news')],
+        [InlineKeyboardButton(text='📍 Пункты профилактики', callback_data='prevention_points')],
+        [InlineKeyboardButton(text='🧑‍⚕️ Онлайн-услуги', callback_data='online-services')],
+        [InlineKeyboardButton(text='🌐 Связь с веб-аутрич', callback_data='outreach')],
+        [InlineKeyboardButton(text='🛡️ Снижение вреда', callback_data='harm_reduction')],
+        [InlineKeyboardButton(text='⚠️ Дисклеймер', callback_data='disclaimer')]
+    ]
+
+    if user_id in ADMIN_IDS:
+        keyboard.append([InlineKeyboardButton(text='✏️ Редактировать новости', callback_data='admin_edit_news')])
+
+    return InlineKeyboardMarkup(inline_keyboard=keyboard)
+
 
 drug_categories_ikb = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='Опиоиды', callback_data='opioids')],
@@ -157,69 +192,63 @@ back_opioids_harm_reduction_ikb = InlineKeyboardMarkup(inline_keyboard=[
 
 
 cities_ikb = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text='Минск', callback_data='city_minsk')],
-    [InlineKeyboardButton(text='Витебск', callback_data='city_vitebsk')],
-    [InlineKeyboardButton(text='Пинск', callback_data='city_pinsk')],
-    [InlineKeyboardButton(text='Барановичи', callback_data='city_baranovichi')],
-    [InlineKeyboardButton(text='Орша', callback_data='city_orsha')],
-    [InlineKeyboardButton(text='Светлогорск', callback_data='city_svetlogorsk')],
+    [InlineKeyboardButton(text='🏙️ Минск', callback_data='city_minsk')],
+    [InlineKeyboardButton(text='🏙️ Витебск', callback_data='city_vitebsk')],
+    [InlineKeyboardButton(text='🏙️ Пинск', callback_data='city_pinsk')],
+    [InlineKeyboardButton(text='🏙️ Барановичи', callback_data='city_baranovichi')],
+    [InlineKeyboardButton(text='🏙️ Орша', callback_data='city_orsha')],
+    [InlineKeyboardButton(text='🏙️ Светлогорск', callback_data='city_svetlogorsk')],
     [InlineKeyboardButton(text='Назад', callback_data='back_start')]
 ])
 
 minsk_ikb = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text='Гл. офис (Левкова 20)', callback_data='point_minsk_main-office')],
-    [InlineKeyboardButton(text='Офис 2 (ул. Янки Мавра, 22А)', callback_data='point_minsk_office-2')],
-    [InlineKeyboardButton(text='Автобус 1', callback_data='point_minsk_bus-1')],
-    [InlineKeyboardButton(text='Автобус 2', callback_data='point_minsk_bus-2')],
-    [InlineKeyboardButton(text='Автобус 3', callback_data='point_minsk_bus-3')],
+    [InlineKeyboardButton(text='🏢 Левкова, 20 (гл. офис)', callback_data='point_minsk_main-office')],
+    [InlineKeyboardButton(text='🏢 Янки Мавра, 22А', callback_data='point_minsk_office-2')],
+    [InlineKeyboardButton(text='🚐 Моб. пункт №1', callback_data='point_minsk_bus-1')],
+    [InlineKeyboardButton(text='🚐 Моб. пункт №2', callback_data='point_minsk_bus-2')],
+    [InlineKeyboardButton(text='🚐 Моб. пункт №3', callback_data='point_minsk_bus-3')],
     [InlineKeyboardButton(text='Назад', callback_data='back_cities')]
 ])
 
 vitebsk_ikb = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text='Офис 1 (Октябрьская 12)', callback_data='point_vitebsk_office-1')],
-    [InlineKeyboardButton(text='Офис 2 (Берестеня 15)', callback_data='point_vitebsk_office-2')],
+    [InlineKeyboardButton(text='📍 ул. Октябрьская, 12', callback_data='point_vitebsk_office-1')],
+    [InlineKeyboardButton(text='📍 ул. Берестеня, 15', callback_data='point_vitebsk_office-2')],
     [InlineKeyboardButton(text='Назад', callback_data='back_cities')]
 ])
 
 pinsk_ikb = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text='Офис 1 (Советская 7)', callback_data='point_pinsk_office-1')],
-    [InlineKeyboardButton(text='Автобус 1', callback_data='point_pinsk_bus-1')],
-    [InlineKeyboardButton(text='Назад', callback_data='back_cities')]
+    [InlineKeyboardButton(text='🏢 Советская, 7 (офис)', callback_data='point_pinsk_office-1')],
+    [InlineKeyboardButton(text='🚐 Моб. пункт №1', callback_data='point_pinsk_bus-1')],
+    [InlineKeyboardButton(text='🔙 Назад', callback_data='back_cities')]
 ])
 
 baranovichi_ikb = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text='Офис 1 (3-й пер. Советский 3)', callback_data='point_baranovichi_office-1')],
+    [InlineKeyboardButton(text='🏢 3-й пер. Советский, 3 (офис)', callback_data='point_baranovichi_office-1')],
     [InlineKeyboardButton(text='Назад', callback_data='back_cities')]
 ])
 
 orsha_ikb = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text='Автобус 1', callback_data='point_orsha_bus-1')],
+    [InlineKeyboardButton(text='🚐 Моб. пункт №1', callback_data='point_orsha_bus-1')],
     [InlineKeyboardButton(text='Назад', callback_data='back_cities')]
 ])
 
 svetlogorsk_ikb = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text='Офис 1 (м-н Первомайский 5)', callback_data='point_svetlogorsk_office-1')],
+    [InlineKeyboardButton(text='🏢 м-н Первомайский, 5 (офис)', callback_data='point_svetlogorsk_office-1')],
     [InlineKeyboardButton(text='Назад', callback_data='back_cities')]
 ])
 
 specialists_ikb = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text='Позитивный психолог', url='https://t.me/pozitivniypsyholog', callback_data='specialist_psycho')],
-    [InlineKeyboardButton(text='Дружественный нарколог', url='https://t.me/pozitivniynarkolog', callback_data='specialist_narcol')],
-    [InlineKeyboardButton(text='Нестигматизирующий  инфекционист', url='https://t.me/pozitivniydoctor', callback_data='specialist_infect')],
-    [InlineKeyboardButton(text='Лояльный юрист', url='https://t.me/Anyagyl', callback_data='specialist_jurist')],
-    [InlineKeyboardButton(text='Заботливый хирург', url='https://t.me/pozitivniyhirurg', callback_data='specialist_surgeon')],
+    [InlineKeyboardButton(text='🧠 Позитивный психолог', url='https://t.me/pozitivniypsyholog')],
+    [InlineKeyboardButton(text='🩺 Дружественный нарколог', url='https://t.me/pozitivniynarkolog')],
+    [InlineKeyboardButton(text='❤️ Нестигматирующий инфекционист', url='https://t.me/pozitivniydoctor')],
+    [InlineKeyboardButton(text='⚖️ Лояльный юрист', url='https://t.me/pozitivniyurist')],
+    [InlineKeyboardButton(text='🏥 Заботливый хирург', url='https://t.me/pozitivniyhirurg')],
     [InlineKeyboardButton(text='Назад', callback_data='back_start')]
 ])
 
 outreach_ikb = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text='НЛП-мастер, Менеджер Таня Ш', url='https://t.me/solnce0525', callback_data=None)],
-    [InlineKeyboardButton(text='Юр.помощь\Веб-аутрич Аня Г', url='https://t.me/Anyagyl', callback_data=None)],
-    [InlineKeyboardButton(text='Веб-аутрич Катя Р', url='https://t.me/katerosch', callback_data=None)],
-    [InlineKeyboardButton(text='Веб-аутрич Егор К', url='https://t.me/flexxxLuthor', callback_data=None)],
+    [InlineKeyboardButton(text='Веб-аутрич Егор К', url='https://t.me/kremen_egor', callback_data=None)],
     [InlineKeyboardButton(text='Веб-аутрич Митя М', url='https://t.me/nemaulatka', callback_data=None)],
-    [InlineKeyboardButton(text='Веб-аутрич Игорь М', url='https://t.me/Web_Igor_M', callback_data=None)],
-    [InlineKeyboardButton(text='Веб-аутрич Артур П', url='https://t.me/Den_Gaag', callback_data=None)],
-    [InlineKeyboardButton(text='Веб-аутрич Артур С', url='https://t.me/Kordanchik', callback_data=None)],
     [InlineKeyboardButton(text='Назад', callback_data='back_start')]
 ])
 
@@ -290,7 +319,7 @@ point_detail = {
     'point_vitebsk_office-1': [
         {
             'photo_ids': [],
-            'msg': text.STATIONARY_PREVENTION_CENTER_VTB_OKTYABRSKAYA
+            'msg': text.STATIONARY_PREVENTION_CENTER_VTB_REVOLUTIONNAYA
         }
     ],
     'point_vitebsk_office-2': [
@@ -471,7 +500,7 @@ async def img_handler(msg: Message) -> None:
 
 @router.message(Command('start'))
 async def cmd_start_handler(msg: Message) -> None:
-    await msg.answer(text=text.WELCOME, reply_markup=start_ikb)
+    await msg.answer(text=text.WELCOME, reply_markup=get_start_ikb(msg.from_user.id))
 
 
 @router.message(Command('statistic786'))
@@ -479,16 +508,31 @@ async def cmd_statistic_handler(msg: Message) -> None:
     await msg.answer()
 
 
-@router.callback_query(F.data.in_({'prevention_points', 'online-services', 'outreach', 'harm_reduction'}))
+@router.callback_query(
+    F.data.in_({'prevention_points', 'online-services', 'outreach', 'harm_reduction', 'disclaimer', 'menu_news'}))
 async def services_handler(cb_query: CallbackQuery) -> None:
     dt = cb_query.data
-    services = {
+    back_start_ikb = InlineKeyboardMarkup(
+        inline_keyboard=[[InlineKeyboardButton(text='Назад', callback_data='back_start')]])
+
+    # === ОСОБЫЙ СЛУЧАЙ: НОВОСТИ ===
+    if dt == 'menu_news':
+        reload(dynamic_news)  # загружаем свежий текст
+        await cb_query.message.edit_text(
+            text=dynamic_news.NEWS_TEXT,
+            reply_markup=back_start_ikb
+        )
+        return
+
+    # === ОСТАЛЬНЫЕ ПУНКТЫ МЕНЮ ===
+    menu = {
         'prevention_points': [text.CITY_SELECTION, cities_ikb],
         'online-services': [text.SERVICE_SELECTION, specialists_ikb],
         'outreach': [text.OUTREACH, outreach_ikb],
-        'harm_reduction': [text.CATEGORY_SELECTION, drug_categories_ikb]
+        'harm_reduction': [text.CATEGORY_SELECTION, drug_categories_ikb],
+        'disclaimer': [text.DISCLAIMER, back_start_ikb]
     }
-    txt_msg, ikb = services[dt][0], services[dt][1]
+    txt_msg, ikb = menu[dt][0], menu[dt][1]
     await cb_query.message.edit_text(text=txt_msg, reply_markup=ikb)
 
 
@@ -611,7 +655,7 @@ async def back_handler(cb_query: CallbackQuery) -> None:
 
     data = {
         'cities': [text.CITY_SELECTION, cities_ikb],
-        'start': [text.WELCOME, start_ikb],
+        'start': [text.WELCOME, get_start_ikb(cb_query.from_user.id)],
         'drug-categories': [text.CATEGORY_SELECTION, drug_categories_ikb],
         'opioids-info': [text.SECTION_SELECTION.format('Опиоиды. '), opioids_info_ikb],
         'opioids-work': [text.OPIOIDS_WORK, opioids_work_ikb],
@@ -649,10 +693,57 @@ async def city_point_handler(cb_query: CallbackQuery) -> None:
     await cb_query.message.answer(text=text.CONTINUE, reply_markup=ikb)
 
 
-@router.callback_query(F.data == 'disclaimer')
-async def disclaimer_handler(cb_query: CallbackQuery) -> None:
-    ikb = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text='Назад', callback_data='back_start')]])
-    await cb_query.message.edit_text(text=text.DISCLAIMER, reply_markup=ikb)
+@router.callback_query(F.data == 'admin_edit_news')
+async def admin_edit_news(callback: CallbackQuery, state: FSMContext):
+    if callback.from_user.id not in ADMIN_IDS:
+        await callback.answer('⛔ Доступ запрещён', show_alert=True)
+        return
+
+    await callback.answer()
+    await callback.message.edit_text(
+        text="📝 <b>Отправь новый текст новостей</b>\n\n"
+             "Можно использовать <b>HTML-разметку</b>, ссылки и эмодзи.\n"
+             "После отправки — текст сохранится.\n\n"
+             "⬅️ Если передумал — нажми «Отмена»",
+        parse_mode='HTML',
+        reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text='❌ Отмена', callback_data='back_start')]
+        ])
+    )
+    await state.set_state(AdminStates.waiting_for_news)
+
+
+@router.message(AdminStates.waiting_for_news, F.text)
+async def receive_new_news(message: Message, state: FSMContext):
+    if message.from_user.id not in ADMIN_IDS:
+        await message.answer('⛔ Доступ запрещён')
+        return
+
+    # Сохраняем текст в файл
+    save_news_text(message.text)
+
+    # Перезагружаем модуль, чтобы бот увидел новый текст
+    importlib.reload(dynamic_news)
+
+    await state.clear()
+
+    await message.answer(
+        text="✅ <b>Новости успешно обновлены!</b>",
+        parse_mode='HTML',
+        reply_markup=InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text='🔙 В меню', callback_data='back_start')]
+        ])
+    )
+
+
+@router.message(AdminStates.waiting_for_news)
+async def receive_non_text(message: Message, state: FSMContext):
+    if message.from_user.id not in ADMIN_IDS:
+        return
+    await message.answer(
+        text="⚠️ Пожалуйста, отправь <b>текст</b> (не фото, не файл).",
+        parse_mode='HTML'
+    )
 
 
 async def on_startup(bot: Bot):
