@@ -1,5 +1,3 @@
-from importlib import reload
-import dynamic_news
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
 import logging
@@ -37,6 +35,12 @@ logging.basicConfig(level=logging.INFO, stream=sys.stdout)
 # Список ID админов
 ADMIN_IDS = [7054178301]
 
+# Текст новостей (по умолчанию)
+current_news_text = """
+<b>📢 Новости и анонсы</b>
+
+Привет! Здесь ты найдёшь самые свежие новости...
+"""
 
 # Класс состояний для админ-функций
 class AdminStates(StatesGroup):
@@ -44,23 +48,11 @@ class AdminStates(StatesGroup):
 
 
 def save_news_text(new_text: str):
-    """Сохраняет новый текст новостей в файл dynamic_news.py"""
-    with open("dynamic_news.py", 'w', encoding='utf-8') as f:
-        f.write(f'NEWS_TEXT = """{new_text}"""')
+    global current_news_text
+    current_news_text = new_text
 
 
 # Словарь для статистики
-
-
-# keyboards
-# start_ikb = InlineKeyboardMarkup(inline_keyboard=[
-#     [InlineKeyboardButton(text='📢 Новости и анонсы', callback_data='menu_news')],
-#     [InlineKeyboardButton(text='📍 Пункты профилактики', callback_data='prevention_points')],
-#     [InlineKeyboardButton(text='🧑‍⚕️ Онлайн-услуги', callback_data='online-services')],
-#     [InlineKeyboardButton(text='🌐 Связь с веб-аутрич', callback_data='outreach')],
-#     [InlineKeyboardButton(text='🛡️ Снижение вреда', callback_data='harm_reduction')],
-#     [InlineKeyboardButton(text='⚠️ Дисклеймер', callback_data='disclaimer')]
-# ])
 
 
 def get_start_ikb(user_id: int):
@@ -517,9 +509,8 @@ async def services_handler(cb_query: CallbackQuery) -> None:
 
     # === ОСОБЫЙ СЛУЧАЙ: НОВОСТИ ===
     if dt == 'menu_news':
-        reload(dynamic_news)  # загружаем свежий текст
         await cb_query.message.edit_text(
-            text=dynamic_news.NEWS_TEXT,
+            text=current_news_text,
             reply_markup=back_start_ikb
         )
         return
@@ -719,11 +710,8 @@ async def receive_new_news(message: Message, state: FSMContext):
         await message.answer('⛔ Доступ запрещён')
         return
 
-    # Сохраняем текст в файл
+    # Обновляем глобальную переменную
     save_news_text(message.text)
-
-    # Перезагружаем модуль, чтобы бот увидел новый текст
-    importlib.reload(dynamic_news)
 
     await state.clear()
 
